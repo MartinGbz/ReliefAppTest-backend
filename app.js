@@ -36,6 +36,12 @@ app.get('/api/history', (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 });
 
+app.get('/api/history/last', (req, res, next) => {
+    History.find({}).sort({_id:-1}).limit(1)
+        .then(history => res.status(200).json(history))
+        .catch(error => res.status(400).json({ error }));
+});
+
 app.post('/api/history', (req, res, next) => {
     const history = new History({
         url: req.body.url,
