@@ -1,22 +1,22 @@
-const express = require('express'); // imporation de express
+const express = require('express'); // import express
 
-const bodyParser = require('body-parser'); //importation de body parser : transformer le code d'une requette en Json
+const bodyParser = require('body-parser'); //import body-parser : transform the code of a request into Json
 
 const History = require('./models/History');
 
 const Bookmarks = require('./models/Bookmarks');
 
-const mongoose = require('mongoose'); //importer mongoose
+const mongoose = require('mongoose'); //import mongoose
 
 mongoose.connect('mongodb+srv://martin:relief@cluster0.62yuy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     { useNewUrlParser: true,
         useUnifiedTopology: true })
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
+    .then(() => console.log('Successful connection to MongoDB!'))
+    .catch(() => console.log('Connection to MongoDB failed!'));
 
-const app = express(); // creer une application express
+const app = express(); // create an express application
 
-// autoriser les requettes pour tout le monde
+// allow requests for everyone
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -26,13 +26,11 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-// app.use((req, res, next) => {
-//     res.json({message:'TEST message received'});
-// });
+// *** HISTORY ***
 
 app.get('/api/history', (req, res, next) => {
     History.find()
-        .then(things => res.status(200).json(things))
+        .then(history => res.status(200).json(history))
         .catch(error => res.status(400).json({ error }));
 });
 
@@ -45,17 +43,17 @@ app.get('/api/history/last', (req, res, next) => {
 app.post('/api/history', (req, res, next) => {
     const history = new History({
         url: req.body.url,
-        // ...req.body
     });
     history.save()
         .then(() => res.status(201).json({ message: 'History saved'}))
         .catch(error => res.status(400).json({ error }));
 });
 
+// *** BOOKMARKS ***
 
 app.get('/api/bookmarks', (req, res, next) => {
     Bookmarks.find()
-        .then(things => res.status(200).json(things))
+        .then(history => res.status(200).json(history))
         .catch(error => res.status(400).json({ error }));
 });
 
@@ -70,5 +68,5 @@ app.post('/api/bookmarks', (req, res, next) => {
 });
 
 
-module.exports = app; // exporter l'application pour les utilisé depuis les autres fichiers (notament le serveur node)
+module.exports = app; // export the application to use it from other files (especially the node server)
 
