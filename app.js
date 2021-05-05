@@ -1,5 +1,5 @@
 const express = require('express'); // import express
-
+const cors = require('cors');
 const bodyParser = require('body-parser'); //import body-parser : transform the code of a request into Json
 
 const History = require('./models/History');
@@ -12,6 +12,8 @@ const { buildSchema } = require('graphql');
 
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolvers = require('./graphql/resolvers');
+
+const allowedOrigins = ['http://localhost:4200', 'http://localhost:8000'];
 
 mongoose.connect('mongodb+srv://martin:relief@cluster0.62yuy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     { useNewUrlParser: true,
@@ -30,6 +32,17 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'INVALID ORIGIN';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+}));
 
 // const schema = buildSchema(`
 //     type History{
