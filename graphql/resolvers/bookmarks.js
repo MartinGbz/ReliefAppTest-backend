@@ -33,5 +33,13 @@ module.exports = {
         } catch (error) {
             throw error
         }
+    },
+
+    removeBookmark: async ({_id}) => {
+        try {
+            return Bookmarks.findByIdAndRemove(_id);
+        } catch (error) {
+            throw error
+        }
     }
 }

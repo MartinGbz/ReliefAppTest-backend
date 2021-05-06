@@ -11,6 +11,7 @@ exports.BookmarksQueries = `
 
 exports.BookmarksMutations = `
     addBookmarks(url:String!): Bookmarks!
+    removeBookmark(_id:String!): Bookmarks!
 `;
 
 
